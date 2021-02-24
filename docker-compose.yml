@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:12.4
+    environment:
+      POSTGRES_USER: migrate
+      POSTGRES_PASSWORD: migrate
+      POSTGRES_DB: migrate
+    ports:
+      - 127.0.100.1:5432:5432
