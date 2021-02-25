@@ -2,7 +2,7 @@
 
 Supported databases:
 
-* PostgreSQL`;
+* PostgreSQL;
 
 ## Configuration
 
@@ -10,3 +10,13 @@ Supported databases:
 * `HISTORY_TABLE` or `--history-table`/`-t`, default is `migrations_history`
 * `LOG_LEVEL` or `--verbosity`/`-v` one of `debug`, `info`, `warning`, `error`
 * `SOURCE_DIR` or `--source`/`-s` path to migrations dir
+
+## TODO
+
+* [ ] docker, ci
+* [ ] docs
+* [ ] tests
+
+## License
+
+[MIT](LICENSE)
