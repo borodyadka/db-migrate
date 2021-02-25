@@ -22,7 +22,14 @@ func (d *Driver) EnsureSchema() error {
 }
 
 func (d *Driver) EnsureMigrationsTable(ctx context.Context, table *migrate.Table) error {
-	_, err := d.conn.Exec(ctx, fmt.Sprintf(`
+	log.Debug("ensure schema")
+	_, err := d.conn.Exec(ctx, fmt.Sprintf(`CREATE SCHEMA IF NOT EXISTS %s`, table.String()))
+	if err != nil {
+		return err
+	}
+
+	log.Debug("ensure migrations table")
+	_, err = d.conn.Exec(ctx, fmt.Sprintf(`
 		CREATE TABLE IF NOT EXISTS %s (
 			"ts" BIGINT NOT NULL,
 			"name" TEXT NOT NULL,

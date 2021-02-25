@@ -11,6 +11,13 @@ type Table struct {
 	dialect      Dialect
 }
 
+func (t *Table) Schema() string {
+	if t.schema == "" {
+		return `"public"`
+	}
+	return fmt.Sprintf(`"%s"`, t.schema)
+}
+
 func (t *Table) String() string {
 	if t.schema != "" {
 		return fmt.Sprintf(`"%s"."%s"`, t.schema, t.name)
@@ -33,8 +40,8 @@ func ParseTableName(t string, dialect Dialect) (*Table, error) {
 		return nil, drivers.NewErrInvalidTableName(t, 0) // TODO
 	}
 	return &Table{
-		schema: schema,
-		name: table,
+		schema:  schema,
+		name:    table,
 		dialect: dialect,
 	}, nil
 }
