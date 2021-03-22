@@ -9,4 +9,5 @@ type Driver interface {
 	ApplyMigration(ctx context.Context, history *Table, migration *Entry) error
 	RevertMigration(ctx context.Context, history *Table, migration *Entry) error
 	MigrationsHistory(ctx context.Context, history *Table) ([]Entry, error)
+	Ping(ctx context.Context) (bool, error)
 }

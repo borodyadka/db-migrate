@@ -5,6 +5,7 @@ import (
 	"github.com/borodyadka/db-migrate"
 	"github.com/borodyadka/db-migrate/drivers/postgres"
 	log "github.com/sirupsen/logrus"
+	"os"
 	"strconv"
 	"time"
 )
@@ -54,7 +55,7 @@ func down(driver migrate.Driver, count int) error {
 		return err
 	}
 
-	ldm := len(dm)-1
+	ldm := len(dm) - 1
 	for i := ldm; i > ldm-count; i-- {
 		if i < 0 {
 			break
@@ -68,9 +69,20 @@ func down(driver migrate.Driver, count int) error {
 	return nil
 }
 
-func main() {
-	var err error
+func getDriver() migrate.Driver {
+	switch databaseURL.Scheme { // TODO: do not build all drivers
+	case postgres.Dialect.String():
+		driver, err := postgres.NewDriver(context.TODO(), sourceDir, databaseURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return driver
+	}
+	log.Fatalf("unknown driver \"%s\"", databaseURL.Scheme)
+	return nil
+}
 
+func main() {
 	switch command.(type) {
 	case *createCommand:
 		e := migrate.Entry{
@@ -82,15 +94,7 @@ func main() {
 		}
 		return
 	case *migrateCommand:
-		var driver migrate.Driver
-		switch databaseURL.Scheme { // TODO: do not build all drivers
-		case postgres.Dialect.String():
-			if driver, err = postgres.NewDriver(context.TODO(), sourceDir, databaseURL); err != nil {
-				log.Fatal(err)
-			}
-		default:
-			log.Fatalf("unknown driver \"%s\"", databaseURL.Scheme)
-		}
+		driver := getDriver()
 		if err := driver.EnsureMigrationsTable(context.Background(), historyTable); err != nil {
 			log.Fatal(err)
 		}
@@ -106,6 +110,18 @@ func main() {
 			}
 		} else {
 			panic("count == 0")
+		}
+	case *testCommand:
+		driver := getDriver()
+		ok, err := driver.Ping(context.Background())
+		if err != nil {
+			log.Fatal(err)
+		}
+		if ok {
+			os.Exit(0)
+		} else {
+			// see /usr/include/sysexits.h EX_UNAVAILABLE
+			os.Exit(69)
 		}
 	default:
 		log.Fatal("unknown command")

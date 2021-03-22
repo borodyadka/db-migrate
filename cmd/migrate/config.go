@@ -20,7 +20,7 @@ var (
 
 type specification struct {
 	LogLevel     string `envconfig:"LOG_LEVEL" default:"INFO" short:"v" long:"verbosity"`
-	DatabaseURL  string `envconfig:"DATABSE_URL" short:"d" long:"db-url"`
+	DatabaseURL  string `envconfig:"DATABASE_URL" short:"d" long:"db-url"`
 	HistoryTable string `envconfig:"HISTORY_TABLE" short:"t" long:"history-table"`
 	SourceDir    string `envconfig:"SOURCE_DIR" short:"s" long:"source"`
 }

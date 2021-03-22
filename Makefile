@@ -7,9 +7,9 @@ build: bin/migrate
 bin/migrate: $(./.../*.go)
 	go build -mod vendor -o bin/migrate ./cmd/migrate
 
-migration.create:
+migration.create: bin/migrate
 	go run ./cmd/migrate create "$(name)"
-migration.up:
+migration.up: bin/migrate
 	bin/migrate up $(count)
-migration.down:
+migration.down: bin/migrate
 	bin/migrate down $(count)

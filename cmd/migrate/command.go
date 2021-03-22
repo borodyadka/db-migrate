@@ -18,6 +18,10 @@ type createCommand struct {
 
 func (*createCommand) IsCommand() {}
 
+type testCommand struct{}
+
+func (*testCommand) IsCommand() {}
+
 type commandType interface {
 	IsCommand()
 }
@@ -46,6 +50,8 @@ func parseCommand(cmd []string) (commandType, error) {
 			return &migrateCommand{Count: math.MaxInt32}, nil
 		case "down":
 			return &migrateCommand{Count: -1}, nil
+		case "test":
+			return &testCommand{}, nil
 		}
 	}
 

@@ -114,6 +114,14 @@ func (d *Driver) MigrationsHistory(ctx context.Context, history *migrate.Table) 
 	return result, nil
 }
 
+func (d *Driver) Ping(ctx context.Context) (bool, error) {
+	err := d.conn.Ping(ctx)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func NewDriver(ctx context.Context, datadir string, url *url.URL) (*Driver, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

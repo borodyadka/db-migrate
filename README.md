@@ -23,6 +23,7 @@ Commands:
 * `up [n]` — apply migrations, default `n` is `MaxInt32`
 * `down [n]` — revert migrations, default `n` is `1`
 * `create <name>` — create new migration
+* `test` — tests connection
 
 ## Configuration
 
