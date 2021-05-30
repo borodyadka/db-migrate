@@ -3,11 +3,12 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"time"
+
 	"github.com/borodyadka/db-migrate"
 	"github.com/jackc/pgx/v4"
 	log "github.com/sirupsen/logrus"
-	"net/url"
-	"time"
 )
 
 const Dialect migrate.Dialect = "postgres"
@@ -23,7 +24,7 @@ func (d *Driver) EnsureSchema() error {
 
 func (d *Driver) EnsureMigrationsTable(ctx context.Context, table *migrate.Table) error {
 	log.Debug("ensure schema")
-	_, err := d.conn.Exec(ctx, fmt.Sprintf(`CREATE SCHEMA IF NOT EXISTS %s`, table.String()))
+	_, err := d.conn.Exec(ctx, fmt.Sprintf(`CREATE SCHEMA IF NOT EXISTS %s`, table.Schema()))
 	if err != nil {
 		return err
 	}
